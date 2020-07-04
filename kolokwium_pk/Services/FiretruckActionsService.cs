@@ -26,6 +26,13 @@ namespace kolokwium_pk.Services
                 return null;
             }
 
+            var isActionAlreadyAssignedWithAnyFiretruck = _context.FiretruckActions.Where(fAction => fAction.IdAction == IdAction).FirstOrDefault() != null;
+
+            if (isActionAlreadyAssignedWithAnyFiretruck)
+            {
+                throw new FirefightersException("Action is already assigned to firetruck.");
+            }
+
             if (concreteAction.NeedSpecialEquipment && concreteFiretruck.SpecialEquipment == false)
             {
                 throw new FirefightersException("Firetruck needs special equipment.");
@@ -40,7 +47,8 @@ namespace kolokwium_pk.Services
                                                 EndTime = singleAction.EndTime
                                             });
 
-            var isFiretruckAlreadyAssignedToAction = concreteFiretruckActions
+           /* 
+           var isFiretruckAlreadyAssignedToAction = concreteFiretruckActions
                                                         .Where(action => action.IdAction == IdAction)
                                                         .FirstOrDefault() != null;
 
@@ -48,6 +56,7 @@ namespace kolokwium_pk.Services
             {
                 throw new FirefightersException("Firetruck is already assigned to this action.");
             }
+            */
 
             var existingNotEndedActions = concreteFiretruckActions
                           .Where(action => action.EndTime == null)
